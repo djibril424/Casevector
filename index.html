@@ -12,6 +12,25 @@ body {
     background: white;
     color: black;
 }
+    input, select, button {
+    font-size: 16px;
+}
+    .toggle button {
+    color: black;
+}
+    input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    color: black;
+    background: white;
+}
+    select {
+    appearance: none;
+}
 
 /* FULL SCREEN LAYOUT FIX */
 .app {
@@ -206,6 +225,18 @@ input, select {
         </div>
 
         <div class="result" id="resultBox"></div>
+        <div id="loadingBox" style="display:none; text-align:center; margin-top:15px;">
+    <div style="margin-bottom:10px;">Analyzing your firm...</div>
+
+    <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
+        <div id="loadingBar" style="
+            width:0%;
+            height:100%;
+            background:#123611;
+            transition: width 2s ease;
+        "></div>
+    </div>
+</div>
 
         <button class="btn primary" id="requestBtn" style="display:none;" onclick="goToPage(2)">
             Request Full Audit
@@ -306,57 +337,78 @@ function formatMoney(n) {
     return Math.abs(n).toLocaleString("en-US");
 }
 /* CALC */
-function calculate() {
+    function calculate() {
 
-    let L = Number(document.getElementById("leads").value);
-    let S = Number(document.getElementById("stay").value) / 100;
-    let V = Number(document.getElementById("value").value);
+    document.getElementById("loadingBox").style.display = "block";
+    document.getElementById("resultBox").style.display = "none";
+    document.getElementById("requestBtn").style.display = "none";
 
-    let C = 0.25;
+    // animate bar
+    setTimeout(() => {
+        document.getElementById("loadingBar").style.width = "100%";
+    }, 100);
 
-    let S_opt = 0.85;
-    let C_opt = 0.40;
+    // delay real calculation
+    setTimeout(() => {
 
-    let actual = (L * S * C) * V;
-    let ideal = (L * S_opt * C_opt) * V;
+        let L = Number(document.getElementById("leads").value || 0);
+        let S = Number(document.getElementById("stay").value || 0) / 100;
+        let V = Number(document.getElementById("value").value || 0);
 
-   let loss = Math.max(0, ideal - actual);
-   let saved = Math.max(0, loss * 0.75);
+        S = Math.min(1, Math.max(0, S));
 
-// Split leaks into money instead of %
-   let wastedLeadsLoss = loss * (1 - S);
-   let missedOppLoss = loss - wastedLeadsLoss;
+        let C = 0.25;
+        let S_opt = 0.85;
+        let C_opt = 0.40;
 
-   document.getElementById("resultBox").style.display = "block";
-   document.getElementById("resultBox").innerHTML = `
-After analyzing your firm and comparing with industry standards, our AI concluded:
+        let actual = (L * S * C) * V;
+        let ideal = (L * S_opt * C_opt) * V;
 
-<br><br>
+        let loss = Math.max(0, ideal - actual);
+        let saved = loss * 0.75;
 
-You are losing <span class="red">-$${formatMoney(loss)}</span> per year.
+        let wastedLeadsLoss = loss * (1 - S);
+        let missedOppLoss = loss - wastedLeadsLoss;
 
-<br><br>
+        function formatMoney(n) {
+            return Math.abs(n).toLocaleString("en-US");
+        }
 
-Top leak: <span class="red">-$${formatMoney(wastedLeadsLoss)}</span> 
-(money lost because you're wasting leads)
+        document.getElementById("loadingBox").style.display = "none";
 
-<br>
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("resultBox").innerHTML = `
+        After analyzing your firm and comparing with industry standards, our AI concluded:
 
-Bottom leak: <span class="red">-$${formatMoney(missedOppLoss)}</span> 
-(money lost because you missed opportunities)
+        <br><br>
 
-<br><br>
+        You are losing <span class="red">-$${formatMoney(loss)}</span> per year.
 
-You could recover <span class="green">+$${formatMoney(saved)}</span> 
-if you fix a few key issues.
+        <br><br>
 
-<br><br>
+        Top leak: <span class="red">-$${formatMoney(wastedLeadsLoss)}</span> 
+        (money lost because you're wasting leads)
 
-We can send the exact steps for free.
-`;
-document.getElementById("requestBtn").style.display = "block";
-// SEND PARTIAL DATA (important for your funnel)
-sendToBackend({L,S,V,data});
+        <br>
+
+        Bottom leak: <span class="red">-$${formatMoney(missedOppLoss)}</span> 
+        (money lost because you missed opportunities)
+
+        <br><br>
+
+        You could recover <span class="green">+$${formatMoney(saved)}</span> 
+        if you fix a few key issues.
+
+        <br><br>
+
+        We can send the exact steps for free.
+        `;
+
+        document.getElementById("requestBtn").style.display = "block";
+
+        sendToBackend({L,S,V,data});
+
+    }, 2000); // 2 seconds delay
 }
 
 function submitAll() {
