@@ -290,21 +290,16 @@ input, select {
                     <option>Owner</option>
                     <option>Other</option>
                 </select>
-        </div>
                 <div id="sendingBox" style="display:none; text-align:center; margin-top:20px;">
-        <div style="margin-bottom:10px;">Sending your data...</div>
+    <div style="margin-bottom:10px;">Sending your data...</div>
 
-        <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
-            <div id="sendingBar" style="
-                width:0%;
-                height:100%;
-                background:#123611;
-                transition: width 2s ease;
-            "></div>
-        </div>
-    </div>
-
-</div>
+    <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
+        <div id="sendingBar" style="
+            width:0%;
+            height:100%;
+            background:#123611;
+            transition: width 2s ease;
+        "></div>
     </div>
 </div>
             </div>
@@ -449,30 +444,25 @@ function submitAll() {
         funnelData: data
     };
 
-    // 1. Show animation
+    // SHOW LOADING UI
     document.getElementById("sendingBox").style.display = "block";
 
-    // 2. Hide ONLY the form
-    document.getElementById("formCard").style.display = "none";
-
-    // 3. FORCE browser to render BEFORE continuing
-    requestAnimationFrame(() => {
-
-        // 4. Start progress bar
+    // animate bar
+    setTimeout(() => {
         document.getElementById("sendingBar").style.width = "100%";
+    }, 100);
 
-        // 5. Send data (non-blocking)
-        fetch("YOUR_GOOGLE_SCRIPT_URL", {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-
-        // 6. Wait so user actually sees animation
-        setTimeout(() => {
-            window.location.href = "https://www.casevector.pro";
-        }, 2000);
-
+    // SEND DATA
+    fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify(payload)
     });
+
+    // DELAY THEN REDIRECT
+    setTimeout(() => {
+        window.location.href = "https://www.casevector.pro";
+    }, 2000);
+    document.querySelector("#page3 .card").style.display = "none";
 }
 
     function showError(input, message) {
