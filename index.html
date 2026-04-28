@@ -322,6 +322,7 @@ function calculate() {
     let saved = loss * 0.75;
 
     let topLeak = (1 - S) * 100;
+    let bottomLeak = 100 - topLeak;
 
    document.getElementById("resultBox").style.display = "block";
 document.getElementById("resultBox").innerHTML = `
@@ -353,15 +354,11 @@ function submitAll() {
         revenue: document.getElementById("revenue").value,
         funnelData: data
     };
-function sendToBackend(payload) {
-fetch("YOUR_
-GOOGLE
-SCRIPT
-_
-_URL", {
-method: "POST",
-body: JSON.stringify(payload)
-});
+
+    fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
 
 }
 
