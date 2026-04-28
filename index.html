@@ -189,17 +189,17 @@ input, select {
         <div class="card">
 
             <div class="form-group">
-                <label>Monthly inbound leads</label>
+                <label>How many potential clients (leads) do you get per month?</label>
                 <input id="leads" type="number">
             </div>
 
             <div class="form-group">
-                <label>% of leads that stay</label>
+                <label>What percentage of leads become paying clients?</label>
                 <input id="stay" type="number">
             </div>
 
             <div class="form-group">
-                <label>Do you respond within 5 minutes?</label>
+                <label>Do you respond to leads within 5 minutes?</label>
                 <div class="toggle">
                     <button onclick="setYesNo(this,'fastResponse',true)">Yes</button>
                     <button onclick="setYesNo(this,'fastResponse',false)">No</button>
@@ -207,7 +207,7 @@ input, select {
             </div>
 
             <div class="form-group">
-                <label>Do you capture after-hours leads?</label>
+                <label>Can your system capture leads after working hours?</label>
                 <div class="toggle">
                     <button onclick="setYesNo(this,'afterHours',true)">Yes</button>
                     <button onclick="setYesNo(this,'afterHours',false)">No</button>
@@ -215,7 +215,7 @@ input, select {
             </div>
 
             <div class="form-group">
-                <label>Average case value ($)</label>
+                <label>How much does a typical client spend ($)?</label>
                 <input id="value" type="number">
             </div>
 
@@ -239,7 +239,7 @@ input, select {
 </div>
 
         <button class="btn primary" id="requestBtn" style="display:none;" onclick="goToPage(2)">
-            Request Full Audit
+            Send me the full breakdown
         </button>
     </div>
 
@@ -377,31 +377,42 @@ function formatMoney(n) {
 
         document.getElementById("resultBox").style.display = "block";
         document.getElementById("resultBox").innerHTML = `
-        After analyzing your firm and comparing with industry standards, our AI concluded:
+CaseVector AI analysis:
 
-        <br><br>
+<br><br>
 
-        You are losing <span class="red">-$${formatMoney(loss)}</span> per year.
+After analyzing your firm and comparing it with industry data, CaseVector AI found:
 
-        <br><br>
+<br><br>
 
-        Top leak: <span class="red">-$${formatMoney(wastedLeadsLoss)}</span> 
-        (money lost because you're wasting leads)
+Your firm is losing approximately 
+<span class="red">-$${formatMoney(loss)}</span> per year due to inefficiencies in your system.
 
-        <br>
+<br><br>
 
-        Bottom leak: <span class="red">-$${formatMoney(missedOppLoss)}</span> 
-        (money lost because you missed opportunities)
+<strong>Here’s the breakdown</strong>
 
-        <br><br>
+<br><br>
 
-        You could recover <span class="green">+$${formatMoney(saved)}</span> 
-        if you fix a few key issues.
+• Top leak: <span class="red">-$${formatMoney(wastedLeadsLoss)}</span>  
+(money lost because you're wasting leads)
 
-        <br><br>
+<br>
 
-        We can send the exact steps for free.
-        `;
+• Bottom leak: <span class="red">-$${formatMoney(missedOppLoss)}</span>  
+(money lost because you missed opportunities)
+
+<br><br>
+
+You could recover up to 
+<span class="green">+$${formatMoney(saved)}</span> per year if these issues are fixed.
+
+<br><br>
+
+CaseVector AI has created a FREE full breakdown showing exactly where these losses come from and how to fix them.
+
+<br><br>
+`;
 
         document.getElementById("requestBtn").style.display = "block";
 
