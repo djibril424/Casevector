@@ -220,7 +220,7 @@ input, select {
             </div>
 
             <button class="btn secondary" onclick="resetForm()">Reset</button>
-          <button class="btn primary" onclick="calculate()">Done</button>
+            <button class="btn primary" onclick="calculate()">Done</button>
 
         </div>
 
@@ -238,7 +238,9 @@ input, select {
     </div>
 </div>
 
-        <button class="btn primary" onclick="validatePage1()">Done</button>
+        <button class="btn primary" id="requestBtn" style="display:none;" onclick="goToPage(2)">
+            Request Full Audit
+        </button>
     </div>
 
     <!-- PAGE 2 -->
@@ -258,7 +260,7 @@ input, select {
                 <input id="email">
             </div>
 
-         <button class="btn primary" onclick="validatePage2()">Next</button>
+            <button class="btn primary" onclick="goToPage(3)">Next</button>
 
         </div>
     </div>
@@ -300,7 +302,7 @@ input, select {
                 </select>
             </div>
 
-         <button class="btn primary" onclick="validatePage3()">Get Results</button>
+            <button class="btn primary" onclick="submitAll()">Get Results</button>
 
         </div>
     </div>
@@ -311,9 +313,10 @@ input, select {
 <script>
 
 let data = {
-    fastResponse: null,
-    afterHours: null
+    fastResponse: false,
+    afterHours: false
 };
+
 function setYesNo(btn, key, value) {
     data[key] = value;
     let siblings = btn.parentNode.querySelectorAll('button');
@@ -332,14 +335,6 @@ function goToPage(n) {
 }
 function formatMoney(n) {
     return Math.abs(n).toLocaleString("en-US");
-}
-    function showError(input, message) {
-    input.style.border = "1px solid red";
-    input.placeholder = message;
-}
-
-function clearError(input) {
-    input.style.border = "1px solid #ccc";
 }
 /* CALC */
     function calculate() {
@@ -433,94 +428,6 @@ function submitAll() {
         body: JSON.stringify(payload)
     });
 
-}
-    function showError(input, message) {
-    input.style.border = "1px solid red";
-    input.placeholder = message;
-}
-
-function clearError(input) {
-    input.style.border = "1px solid #ccc";
-}
-
-/* PAGE 1 VALIDATION */
-function validatePage1() {
-
-    let leads = document.getElementById("leads");
-    let stay = document.getElementById("stay");
-    let value = document.getElementById("value");
-
-    let valid = true;
-
-    if (!leads.value) {
-        showError(leads, "Enter leads");
-        valid = false;
-    } else clearError(leads);
-
-    if (!stay.value || stay.value > 100) {
-        showError(stay, "0 - 100%");
-        valid = false;
-    } else clearError(stay);
-
-    if (!value.value) {
-        showError(value, "Enter value");
-        valid = false;
-    } else clearError(value);
-
-    if (data.fastResponse === null || data.afterHours === null) {
-        alert("Please answer all questions");
-        valid = false;
-    }
-
-    if (!valid) return;
-
-    calculate();
-}
-
-/* PAGE 2 VALIDATION */
-function validatePage2() {
-
-    let name = document.getElementById("name");
-    let email = document.getElementById("email");
-
-    let valid = true;
-
-    if (!name.value) {
-        showError(name, "Enter name");
-        valid = false;
-    } else clearError(name);
-
-    if (!email.value || !email.value.includes("@")) {
-        showError(email, "Valid email");
-        valid = false;
-    } else clearError(email);
-
-    if (!valid) return;
-
-    goToPage(3);
-}
-
-/* PAGE 3 VALIDATION */
-function validatePage3() {
-
-    let firm = document.getElementById("firm");
-    let phone = document.getElementById("phone");
-
-    let valid = true;
-
-    if (!firm.value) {
-        showError(firm, "Enter firm");
-        valid = false;
-    } else clearError(firm);
-
-    if (!phone.value) {
-        showError(phone, "Enter phone");
-        valid = false;
-    } else clearError(phone);
-
-    if (!valid) return;
-
-    submitAll();
 }
 
 </script>
