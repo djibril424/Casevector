@@ -208,7 +208,7 @@ input, select {
         <div class="result" id="resultBox"></div>
 
         <button class="btn primary" id="requestBtn" style="display:none;" onclick="goToPage(2)">
-Request Full Audit
+            Request Full Audit
         </button>
     </div>
 
@@ -323,14 +323,23 @@ function calculate() {
 
     let topLeak = (1 - S) * 100;
 
-    document.getElementById("resultBox").style.display = "block";
-    document.getElementById("resultBox").innerHTML = `
-        You are losing <span class="red">$${loss.toFixed(0)}</span> per year.<br><br>
-        Lead leakage: ${topLeak.toFixed(1)}%<br><br>
-        You could recover <span class="green">$${saved.toFixed(0)}</span>.
-    `;
-
-    document.getElementById("requestBtn").style.display = "block";
+   document.getElementById("resultBox").style.display = "block";
+document.getElementById("resultBox").innerHTML = `
+After analyzing your firm and comparing with industry standards, our AI concluded:
+<br><br>
+You are losing <span class="red">$${loss.toFixed(0)}</span> per year.
+<br><br>
+Top leak: ${topLeak.toFixed(1)}% (wasted leads)
+Bottom leak: ${bottomLeak.toFixed(1)}% (missed opportunities)
+<br><br>
+You could recover <span class="green">$${saved.toFixed(0)}</span> if you fix a few key
+issues.
+<br><br>
+We can send the exact steps for free.
+`;
+document.getElementById("requestBtn").style.display = "block";
+// SEND PARTIAL DATA (important for your funnel)
+sendToBackend({L,S,V,data});
 }
 
 function submitAll() {
@@ -344,13 +353,16 @@ function submitAll() {
         revenue: document.getElementById("revenue").value,
         funnelData: data
     };
+function sendToBackend(payload) {
+fetch("YOUR_
+GOOGLE
+SCRIPT
+_
+_URL", {
+method: "POST",
+body: JSON.stringify(payload)
+});
 
-    fetch("YOUR_GOOGLE_SCRIPT_URL", {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
-
-    alert("Sent.");
 }
 
 </script>
