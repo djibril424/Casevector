@@ -290,14 +290,6 @@ input, select {
                     <option>Owner</option>
                     <option>Other</option>
                 </select>
-
-    <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
-        <div id="sendingBar" style="
-            width:0%;
-            height:100%;
-            background:#123611;
-            transition: width 2s ease;
-        "></div>
     </div>
 </div>
             </div>
@@ -312,6 +304,13 @@ input, select {
                 </select>
                        <div id="sendingBox" style="display:none; text-align:center; margin-top:20px;">
     <div style="margin-bottom:10px;">Sending your data...</div>
+                               <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
+        <div id="sendingBar" style="
+            width:0%;
+            height:100%;
+            background:#123611;
+            transition: width 2s ease;
+        "></div>
             </div>
 
           <button class="btn primary" onclick="validatePage3()">Get Results</button>
