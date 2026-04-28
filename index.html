@@ -252,12 +252,12 @@ input, select {
 
             <div class="form-group">
                 <label>Full Name</label>
-                <input id="name">
+                <input id="name" type="text" name="name" autocomplete="name">
             </div>
 
             <div class="form-group">
                 <label>Email</label>
-                <input id="email">
+                <input id="email" type="email" name="email" autocomplete="email">
             </div>
 
             <button class="btn primary" onclick="validatePage2()">Next</button>
@@ -274,12 +274,12 @@ input, select {
 
             <div class="form-group">
                 <label>Firm Name</label>
-                <input id="firm">
+                <input id="firm" type="text" name="organization" autocomplete="organization">
             </div>
 
             <div class="form-group">
                 <label>Phone Number</label>
-                <input id="phone">
+                <input id="phone" type="tel" name="phone" autocomplete="tel">
             </div>
 
             <div class="form-group">
@@ -290,6 +290,18 @@ input, select {
                     <option>Owner</option>
                     <option>Other</option>
                 </select>
+                <div id="sendingBox" style="display:none; text-align:center; margin-top:20px;">
+    <div style="margin-bottom:10px;">Sending your data...</div>
+
+    <div style="width:100%; height:8px; background:#eee; border-radius:10px; overflow:hidden;">
+        <div id="sendingBar" style="
+            width:0%;
+            height:100%;
+            background:#123611;
+            transition: width 2s ease;
+        "></div>
+    </div>
+</div>
             </div>
 
             <div class="form-group">
@@ -420,7 +432,6 @@ CaseVector AI has created a FREE full breakdown showing exactly where these loss
 
     }, 2000); // 2 seconds delay
 }
-
 function submitAll() {
 
     let payload = {
@@ -433,12 +444,27 @@ function submitAll() {
         funnelData: data
     };
 
+    // SHOW LOADING UI
+    document.getElementById("sendingBox").style.display = "block";
+
+    // animate bar
+    setTimeout(() => {
+        document.getElementById("sendingBar").style.width = "100%";
+    }, 100);
+
+    // SEND DATA
     fetch("YOUR_GOOGLE_SCRIPT_URL", {
         method: "POST",
         body: JSON.stringify(payload)
     });
 
+    // DELAY THEN REDIRECT
+    setTimeout(() => {
+        window.location.href = "https://www.casevector.pro";
+    }, 2000);
+    document.querySelector("#page3 .card").style.display = "none";
 }
+
     function showError(input, message) {
     input.style.border = "1px solid red";
     input.placeholder = message;
