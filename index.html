@@ -302,7 +302,9 @@ function goToPage(n) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page' + n).classList.add('active');
 }
-
+function formatMoney(n) {
+    return Math.abs(n).toLocaleString("en-US");
+}
 /* CALC */
 function calculate() {
 
@@ -318,24 +320,38 @@ function calculate() {
     let actual = (L * S * C) * V;
     let ideal = (L * S_opt * C_opt) * V;
 
-    let loss = ideal - actual;
-    let saved = loss * 0.75;
+   let loss = Math.max(0, ideal - actual);
+   let saved = Math.max(0, loss * 0.75);
 
-    let topLeak = (1 - S) * 100;
-    let bottomLeak = 100 - topLeak;
+// Split leaks into money instead of %
+   let wastedLeadsLoss = loss * (1 - S);
+   let missedOppLoss = loss - wastedLeadsLoss;
 
    document.getElementById("resultBox").style.display = "block";
-document.getElementById("resultBox").innerHTML = `
+   document.getElementById("resultBox").innerHTML = `
 After analyzing your firm and comparing with industry standards, our AI concluded:
+
 <br><br>
-You are losing <span class="red">$${loss.toFixed(0)}</span> per year.
+
+You are losing <span class="red">-$${formatMoney(loss)}</span> per year.
+
 <br><br>
-Top leak: ${topLeak.toFixed(1)}% (wasted leads)
-Bottom leak: ${bottomLeak.toFixed(1)}% (missed opportunities)
+
+Top leak: <span class="red">-$${formatMoney(wastedLeadsLoss)}</span> 
+(money lost because you're wasting leads)
+
+<br>
+
+Bottom leak: <span class="red">-$${formatMoney(missedOppLoss)}</span> 
+(money lost because you missed opportunities)
+
 <br><br>
-You could recover <span class="green">$${saved.toFixed(0)}</span> if you fix a few key
-issues.
+
+You could recover <span class="green">+$${formatMoney(saved)}</span> 
+if you fix a few key issues.
+
 <br><br>
+
 We can send the exact steps for free.
 `;
 document.getElementById("requestBtn").style.display = "block";
