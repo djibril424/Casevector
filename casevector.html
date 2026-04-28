@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CaseVector AI</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: white;
+    color: black;
+}
+
+/* FULL SCREEN LAYOUT FIX */
+.app {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* CONTAINER */
+.container {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    background: #ddd;
+    border-radius: 8px;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.desc {
+    font-size: 13px;
+    margin: 15px 0 25px;
+    line-height: 1.4;
+}
+
+/* CARD */
+.card {
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* IMPORTANT: spacing system */
+}
+
+/* FORM GROUP (fix spacing problem) */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* INPUTS */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+/* TOGGLES */
+.toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.toggle button.active {
+    background: #123611;
+    color: white;
+}
+
+/* BUTTONS */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary {
+    background: #123611;
+    color: white;
+}
+
+.primary:active {
+    background: #0c240c;
+}
+
+.secondary {
+    background: #eee;
+}
+
+/* RESULT */
+.result {
+    display: none;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    font-size: 13px;
+}
+
+.red { color: red; font-weight: bold; }
+.green { color: green; font-weight: bold; }
+
+/* PAGE SYSTEM */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* spacing between pages */
+.page h3 {
+    margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo"></div>
+        <div class="title">CaseVector AI</div>
+    </div>
+
+    <div class="desc">
+        CaseVector AI analyzes your firm, finds where you're losing money and shows how to fix it.
+    </div>
+
+    <!-- PAGE 1 -->
+    <div id="page1" class="page active">
+
+        <div class="card">
+
+            <div class="form-group">
+                <label>Monthly inbound leads</label>
+                <input id="leads" type="number">
+            </div>
+
+            <div class="form-group">
+                <label>% of leads that stay</label>
+                <input id="stay" type="number">
+            </div>
+
+            <div class="form-group">
+                <label>Do you respond within 5 minutes?</label>
+                <div class="toggle">
+                    <button onclick="setYesNo(this,'fastResponse',true)">Yes</button>
+                    <button onclick="setYesNo(this,'fastResponse',false)">No</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Do you capture after-hours leads?</label>
+                <div class="toggle">
+                    <button onclick="setYesNo(this,'afterHours',true)">Yes</button>
+                    <button onclick="setYesNo(this,'afterHours',false)">No</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Average case value ($)</label>
+                <input id="value" type="number">
+            </div>
+
+            <button class="btn secondary" onclick="resetForm()">Reset</button>
+            <button class="btn primary" onclick="calculate()">Done</button>
+
+        </div>
+
+        <div class="result" id="resultBox"></div>
+
+        <button class="btn primary" id="requestBtn" style="display:none;" onclicki="goToPage(2)">
+          Request Full Audit
+        </button>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="page2" class="page">
+
+        <h3>Verify that you're a real firm</h3>
+
+        <div class="card">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input id="name">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input id="email">
+            </div>
+
+            <button class="btn primary" onclick="goToPage(3)">Next</button>
+
+        </div>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div id="page3" class="page">
+
+        <h3>Final verification</h3>
+
+        <div class="card">
+
+            <div class="form-group">
+                <label>Firm Name</label>
+                <input id="firm">
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input id="phone">
+            </div>
+
+            <div class="form-group">
+                <label>Position</label>
+                <select id="role">
+                    <option>Partner</option>
+                    <option>Senior</option>
+                    <option>Owner</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Monthly Revenue</label>
+                <select id="revenue">
+                    <option><$50k</option>
+                    <option>$50k-$200k</option>
+                    <option>$200k-$600k</option>
+                    <option>>$600k</option>
+                </select>
+            </div>
+
+            <button class="btn primary" onclick="submitAll()">Get Results</button>
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+
+let data = {
+    fastResponse: false,
+    afterHours: false
+};
+
+function setYesNo(btn, key, value) {
+    data[key] = value;
+    let siblings = btn.parentNode.querySelectorAll('button');
+    siblings.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function resetForm() {
+    location.reload();
+}
+
+/* PAGE SYSTEM */
+function goToPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + n).classList.add('active');
+}
+
+/* CALC */
+function calculate() {
+
+    let L = Number(document.getElementById("leads").value);
+    let S = Number(document.getElementById("stay").value) / 100;
+    let V = Number(document.getElementById("value").value);
+
+    let C = 0.25;
+
+    let S_opt = 0.85;
+    let C_opt = 0.40;
+
+    let actual = (L * S * C) * V;
+    let ideal = (L * S_opt * C_opt) * V;
+
+    let loss = ideal - actual;
+    let saved = loss * 0.75;
+
+    let topLeak = (1 - S) * 100;
+
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML = `
+        You are losing <span class="red">$${loss.toFixed(0)}</span> per year.<br><br>
+        Lead leakage: ${topLeak.toFixed(1)}%<br><br>
+        You could recover <span class="green">$${saved.toFixed(0)}</span>.
+    `;
+
+    document.getElementById("requestBtn").style.display = "block";
+}
+
+function submitAll() {
+
+    let payload = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        firm: document.getElementById("firm").value,
+        phone: document.getElementById("phone").value,
+        role: document.getElementById("role").value,
+        revenue: document.getElementById("revenue").value,
+        funnelData: data
+    };
+
+    fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
+
+    alert("Sent.");
+}
+
+</script>
+
+</body>
+</html>
