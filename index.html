@@ -323,6 +323,7 @@ input, select {
 </div>
 
 <script>
+let leadData = {};
 let data = {
     fastResponse: null,
     afterHours: null
@@ -361,7 +362,7 @@ function formatMoney(n) {
 
     // delay real calculation
     setTimeout(() => {
-
+       
         let L = Number(document.getElementById("leads").value || 0);
         let S = Number(document.getElementById("stay").value || 0) / 100;
         let V = Number(document.getElementById("value").value || 0);
@@ -428,21 +429,27 @@ CaseVector AI has created a FREE full breakdown showing exactly where these loss
 
         document.getElementById("requestBtn").style.display = "block";
 
-        sendToBackend({L,S,V,data});
+    leadData = {
+    leads: L,
+    stayRate: S,
+    value: V,
+    fastResponse: data.fastResponse,
+    afterHours: data.afterHours
+};
+
 
     }, 2000); // 2 seconds delay
 }
 function submitAll() {
-
-    let payload = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        firm: document.getElementById("firm").value,
-        phone: document.getElementById("phone").value,
-        role: document.getElementById("role").value,
-        revenue: document.getElementById("revenue").value,
-        funnelData: data
-    };
+ let payload = {
+    ...leadData,
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    firm: document.getElementById("firm").value,
+    phone: document.getElementById("phone").value,
+    role: document.getElementById("role").value,
+    revenue: document.getElementById("revenue").value
+};
 
     // SHOW LOADING UI
     document.getElementById("sendingBox").style.display = "block";
@@ -453,10 +460,13 @@ function submitAll() {
     }, 100);
 
     // SEND DATA
-    fetch("YOUR_GOOGLE_SCRIPT_URL", {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
+    fetch("https://formspree.io/f/mnjleyvy", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+});
 
     // DELAY THEN REDIRECT
     setTimeout(() => {
@@ -553,9 +563,12 @@ function validatePage3() {
 
     submitAll();
 }
-    function sendToBackend(payload) {
-    fetch("YOUR_GOOGLE_SCRIPT_URL", {
+   function sendToBackend(payload) {
+    fetch("https://formspree.io/f/mnjleyvy", {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
     });
 }
