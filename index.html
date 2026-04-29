@@ -452,6 +452,7 @@ sendToBackend(leadData);
     }, 2000); // 2 seconds delay
 }
 function submitAll() {
+
  let payload = {
     ...leadData,
     name: document.getElementById("name").value,
@@ -460,30 +461,35 @@ function submitAll() {
     phone: document.getElementById("phone").value,
     role: document.getElementById("role").value,
     revenue: document.getElementById("revenue").value
-};
+ };
 
-    // SHOW LOADING UI
-    document.getElementById("sendingBox").style.display = "block";
+ document.getElementById("sendingBox").style.display = "block";
 
-    // animate bar
-    setTimeout(() => {
-        document.getElementById("sendingBar").style.width = "100%";
-    }, 100);
+ setTimeout(() => {
+    document.getElementById("sendingBar").style.width = "100%";
+ }, 100);
 
-    // SEND DATA
+ // ONLY ONE SYSTEM (CORRECT)
+ Promise.all([
     fetch("https://formspree.io/f/mnjleyvy", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    }),
 
-    // DELAY THEN REDIRECT
-    setTimeout(() => {
-        window.location.href = "https://www.casevector.pro";
-    }, 2000);
-    document.querySelector("#page3 .card").style.display = "none";
+    emailjs.send("service_wmhrakn", "template_bj9kzys", {
+        ...leadData,
+        name: payload.name,
+        email: payload.email,
+        firm: payload.firm,
+        phone: payload.phone,
+        role: payload.role,
+        revenue: payload.revenue
+    })
+ ]).then(() => {
+    window.location.href = "https://www.casevector.pro";
+ });
+
 }
 
     function showError(input, message) {
@@ -574,38 +580,7 @@ function validatePage3() {
 
     submitAll();
 }
-   function sendToBackend(payload) {
-    fetch("https://formspree.io/f/mnjleyvy", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    });
-    emailjs.send("service_wmhrakn", "template_bj9kzys", {
-    name: payload.name,
-    email: payload.email,
-    firm: payload.firm,
-    phone: payload.phone,
-    role: payload.role,
-    revenue: payload.revenue,
-
-    // from page 1
-    leads: leadData.leads,
-    stayRate: leadData.stayRate,
-    value: leadData.value,
-    fastResponse: leadData.fastResponse,
-    afterHours: leadData.afterHours,
-
-    // calculated
-    loss: leadData.loss,
-    saved: leadData.saved,
-    wastedLeadsLoss: leadData.wastedLeadsLoss,
-    missedOppLoss: leadData.missedOppLoss
-})
-.then(res => console.log("EmailJS sent", res))
-.catch(err => console.log("EmailJS error", err));
-}
+ 
 
 </script>
 
