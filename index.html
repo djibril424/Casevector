@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+(function(){
+    emailjs.init("syzJ-lFnIgZp5-aUB");
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CaseVector AI</title>
@@ -576,6 +582,29 @@ function validatePage3() {
         },
         body: JSON.stringify(payload)
     });
+    emailjs.send("service_wmhrakn", "template_bj9kzys", {
+    name: payload.name,
+    email: payload.email,
+    firm: payload.firm,
+    phone: payload.phone,
+    role: payload.role,
+    revenue: payload.revenue,
+
+    // from page 1
+    leads: leadData.leads,
+    stayRate: leadData.stayRate,
+    value: leadData.value,
+    fastResponse: leadData.fastResponse,
+    afterHours: leadData.afterHours,
+
+    // calculated
+    loss: leadData.loss,
+    saved: leadData.saved,
+    wastedLeadsLoss: leadData.wastedLeadsLoss,
+    missedOppLoss: leadData.missedOppLoss
+})
+.then(res => console.log("EmailJS sent", res))
+.catch(err => console.log("EmailJS error", err));
 }
 
 </script>
