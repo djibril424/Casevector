@@ -431,10 +431,14 @@ CaseVector AI has created a FREE full breakdown showing exactly where these loss
 
     leadData = {
     leads: L,
-    stayRate: S,
+    stayRate: S, 
     value: V,
     fastResponse: data.fastResponse,
     afterHours: data.afterHours,
+    loss: formatMoney(loss),
+    saved: formatMoney(saved),
+    wastedLeadsLoss: formatMoney(wastedLeadsLoss),
+    missedOppLoss: formatMoney(missedOppLoss),
     stage: "page_1"
 };
 sendToBackend(leadData);
